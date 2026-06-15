@@ -69,18 +69,6 @@ class GraphState(TypedDict):
     error: str
     iterations: int
 
-@st.cache_resource
-def build_agent_graph():
-    """Builds and compiles the LangGraph StateGraph (cached for performance)."""
-    
-    # Ensure you have your Groq API key set in your environment
-    # os.environ["GROQ_API_KEY"] = "your_actual_key_here" # Uncomment and paste if not set in terminal
-    
-    llm = ChatGroq(
-        model="llama-3.3-70b-versatile",
-        temperature=0
-    )
-
 def generate_code_node(state: GraphState):
         question = state["question"]
         error = state.get("error", "")
@@ -130,10 +118,8 @@ def execute_code_node(state: GraphState):
     try:
         exec(code, {}, local_vars)
         if 'final_answer' in local_vars:
-            # FIX: We add '"code": code' to the return dict so the UI can display it
             return {"result": local_vars['final_answer'], "error": "", "code": code}
         else:
-            # Fallback if it forgot the variable
             return {"result": eval(code, {"df": df, "pd": pd, "np": np}), "error": "", "code": code}
     except Exception as e:
         # Pass code here too, so we can see what caused the error!
