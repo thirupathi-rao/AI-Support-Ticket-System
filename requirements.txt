@@ -1,0 +1,12 @@
+numpy
+pandas
+langchain
+langchain-core
+langchain-community
+langchain-ollama
+streamlit
+openpyxl
+tabulate
+langgraph
+langchain_groq
+dotenv
